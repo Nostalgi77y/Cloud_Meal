@@ -24,7 +24,7 @@
 - uni-app + Vue 3 + TypeScript 微信小程序端
 - Docker Compose、Flyway、Actuator、OpenAPI 和 GitHub Actions
 - AI 私厨：食材图片/文字分析、用户会话隔离、真实在售菜品匹配与一键加购
-- 独立 Vue 3 用户网页：响应式点餐、购物车、订单与 AI 私厨抽屉
+- 独立 Vue 3 用户网页：正式注册登录、响应式点餐、购物车、订单、我的设置与独立 AI 私厨
 
 ## 快速开始
 

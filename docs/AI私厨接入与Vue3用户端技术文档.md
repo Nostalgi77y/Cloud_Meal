@@ -6,6 +6,8 @@
 
 - 微信小程序全局 AI 私厨悬浮入口与独立分析页；
 - Vue 3 + TypeScript + Pinia 响应式用户网页；
+- 用户名或手机号 + 密码的正式注册登录、个人资料和路由鉴权；
+- 与小程序数据一致的地址、优惠券和 AI 历史设置页；
 - 云膳统一 AI BFF 接口、用户身份透传、会话隔离；
 - AI 结果与云膳真实在售菜品的确定性匹配及一键加购。
 
@@ -34,6 +36,7 @@ AI 私厨 Spring Boot(:8081) ── H2 会话库
 | 菜单查询缓存 | 云膳 Redis | 菜品修改仍由原 ProductService 负责缓存失效 |
 | AI 会话与对话轮次 | AI 私厨 H2 | 每条记录带 `user_id`，所有查询与删除同时校验用户 |
 | AI 生成菜谱 | 请求结果/H2 会话 | 不能直接成为交易数据 |
+| Web 账号与个人资料 | 云膳 MySQL `user` 表 | `username`/`phone` 唯一，密码仅保存 BCrypt 哈希 |
 
 AI 返回后，`AiMenuMatcher` 只在 `status=1 && stock>0` 的当前数据库菜品中匹配，最终返回真实 `dishId`、实时价格、图片和库存。加入购物车仍走原 `CartService`，再次检查上架状态与库存；提交订单仍由原事务重新计算价格并原子扣减库存。因此 AI 不能绕过交易规则，也不会制造不存在的菜品或价格。
 
@@ -54,12 +57,17 @@ AI 返回后，`AiMenuMatcher` 只在 `status=1 && stock>0` 的当前数据库�
 | GET | `/user/ai/conversations/{id}/turns` | 当前用户会话详情 |
 | DELETE | `/user/ai/conversations/{id}/memory` | 清空会话记忆 |
 | DELETE | `/user/ai/conversations/{id}` | 删除会话 |
+| POST | `/user/auth/register` | 用户名或手机号 + 密码注册并签发 JWT |
+| POST | `/user/auth/login` | 正式账号登录 |
+| GET/PUT | `/user/profile` | 查询或修改当前账号资料 |
 
 常用错误码：`AI_INPUT_REQUIRED`、`AI_INPUT_TOO_LONG`、`AI_IMAGE_TOO_LARGE`、`AI_SERVICE_TIMEOUT`、`AI_SERVICE_UNAVAILABLE`、`AI_SERVICE_ERROR`。客户端显示 `message`，但不能在失败时自动提交购物车或订单。
 
 ## 5. 内部身份与安全
 
 - 客户端 JWT 只由云膳校验，AI 服务不接触用户 JWT；
+- Web 密码使用 BCrypt 单向哈希，登录失败不区分账号不存在和密码错误；
+- Flyway V6 为 `user` 增加用户名、密码哈希及用户名/手机号唯一索引；
 - 云膳从安全上下文取得用户 ID，以 `X-Cloud-User-Id` 传给 AI；
 - 生产环境必须在两个项目配置同一个 `CLOUD_MEAL_AI_SERVICE_TOKEN`；
 - AI 服务配置令牌后，缺失/错误令牌的内部请求返回 401；
@@ -79,7 +87,11 @@ AI 返回后，`AiMenuMatcher` 只在 `status=1 && stock>0` 的当前数据库�
 
 微信小程序在菜单、购物车、订单、我的四个主页面挂载 `AiChefFloat`，点击进入 `/pages/ai-chef/index`。页面支持拍摄/相册、文字偏好、“直接点”与“自己做”双模式，以及真实菜品一键加入购物车。
 
-Vue3 网页位于 `cloud-meal-web`，使用 Vue 3、TypeScript、Pinia、Vue Router、Axios、Vite、Nginx。第一版包含首页菜单、分类切换、体验登录、购物车抽屉、地址下单、订单页和 AI 私厨抽屉，并适配桌面与手机宽度。
+Vue3 网页位于 `cloud-meal-web`，使用 Vue 3、TypeScript、Pinia、Vue Router、Axios、Vite、Nginx。第一版包含正式注册登录、首页菜单、购物车、订单、独立 AI 页面和“我的设置”。设置页复用云膳现有接口管理个人资料、收货地址、优惠券和当前账号的 AI 历史。
+
+全站仅保留一个 AI 私厨悬浮入口；进入 `/ai-chef` 后显示独立会话工作区，不再重复展示悬浮按钮。Pinia 仅保存当前 JWT、`userId` 和展示昵称；地址、优惠券、订单和 AI 会话全部以服务端当前 JWT 解析出的 `userId` 为准，客户端传入的用户 ID 不参与数据归属判断。
+
+设置页对 AI 服务采用局部降级：AI 服务不可用时，个人资料、地址和优惠券仍可正常加载，只提示 AI 历史暂不可用。
 
 ## 8. 配置
 
