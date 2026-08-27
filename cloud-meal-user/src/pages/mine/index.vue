@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useUserStore } from '@/stores/user'
+import AiChefFloat from '@/components/AiChefFloat.vue'
 const user=useUserStore()
 async function ensureLogin(){ if(!user.isLoggedIn) await user.login() }
 async function go(url:string){ await ensureLogin(); uni.navigateTo({url}) }
 </script>
 <template>
   <view class="mine">
+    <AiChefFloat />
     <view class="profile"><view class="avatar">膳</view><view><text class="name">{{user.name}}</text><text class="sub">{{user.isLoggedIn?'已登录':'登录后享受完整服务'}}</text></view><button v-if="!user.isLoggedIn" @click="user.login">微信登录</button></view>
     <view class="panel">
       <view @click="go('/pages/address/index')">收货地址<text>›</text></view>

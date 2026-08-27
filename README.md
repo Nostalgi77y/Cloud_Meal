@@ -7,6 +7,7 @@
 - `cloud-meal-server`：Spring Boot 3 后端
 - `cloud-meal-admin`：Vue 3 商家管理端
 - `cloud-meal-user`：uni-app 微信小程序用户端
+- `cloud-meal-web`：Vue 3 + TypeScript 用户商城与 AI 私厨网页端
 - `deploy`：MySQL、Redis、RabbitMQ、MinIO 等本地基础设施
 - `docs`：架构、运行、测试及后续迭代文档
 
@@ -22,11 +23,15 @@
 - Vue 3 + TypeScript 商家管理端
 - uni-app + Vue 3 + TypeScript 微信小程序端
 - Docker Compose、Flyway、Actuator、OpenAPI 和 GitHub Actions
+- AI 私厨：食材图片/文字分析、用户会话隔离、真实在售菜品匹配与一键加购
+- 独立 Vue 3 用户网页：响应式点餐、购物车、订单与 AI 私厨抽屉
 
 ## 快速开始
 
 请从 [`docs/运行手册.md`](docs/运行手册.md) 开始。默认管理端账号：`admin`，密码：`Admin@123456`。
 
 真实交易接入请参阅 [`docs/微信小程序真实支付接入与验收.md`](docs/微信小程序真实支付接入与验收.md)。
+
+AI 私厨与新用户网页请参阅 [`docs/AI私厨接入与Vue3用户端技术文档.md`](docs/AI私厨接入与Vue3用户端技术文档.md)、[`docs/AI私厨接入执行与验收记录.md`](docs/AI私厨接入执行与验收记录.md) 和 [`docs/AI私厨后续完善路线图.md`](docs/AI私厨后续完善路线图.md)。
 
 > 默认密码、数据库密码与 JWT 密钥仅用于本地开发，部署前必须全部更换。

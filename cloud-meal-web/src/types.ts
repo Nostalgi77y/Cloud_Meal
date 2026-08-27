@@ -1,0 +1,12 @@
+export interface ApiResponse<T>{code:string;message:string;data:T}
+export interface Category{id:string;name:string;sort:number}
+export interface Dish{id:string;categoryId:string;name:string;price:number;image?:string;description?:string;stock:number}
+export interface CartItem{id:string;dishId:string;dishName:string;image?:string;unitPrice:number;quantity:number}
+export interface Address{id:string;consignee:string;phone:string;detail:string;isDefault:number}
+export interface OrderDetail{id:string;name:string;quantity:number;amount:number}
+export interface Order{id:string;orderNumber:string;status:string;payStatus:string;amount:number;createdTime:string;details:OrderDetail[]}
+export interface LoginResult{token:string;userId:number;name:string;role:string}
+export interface AiRecipe{name:string;description:string;nutritionScore:number;difficultyScore:number;totalScore:number;cookingTime:string;ingredients:string[];steps:string[]}
+export interface AiRecommendation{dishId:string;dishName:string;description?:string;price:number;image?:string;stock:number;matchScore:number;reason:string}
+export interface AiResult{ingredients:{name:string;freshness:string;estimatedAmount:string}[];recipes:AiRecipe[];safetyNote:string;dishRecommendations:AiRecommendation[]}
+export interface AiConversation{id:string;title:string}

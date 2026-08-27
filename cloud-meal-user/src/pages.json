@@ -5,7 +5,8 @@
     { "path": "pages/order/index", "style": { "navigationBarTitleText": "我的订单" } },
     { "path": "pages/mine/index", "style": { "navigationBarTitleText": "个人中心" } },
     { "path": "pages/address/index", "style": { "navigationBarTitleText": "收货地址" } },
-    { "path": "pages/coupon/index", "style": { "navigationBarTitleText": "优惠券" } }
+    { "path": "pages/coupon/index", "style": { "navigationBarTitleText": "优惠券" } },
+    { "path": "pages/ai-chef/index", "style": { "navigationBarTitleText": "AI 私厨", "navigationBarBackgroundColor": "#123c2f", "navigationBarTextStyle": "white" } }
   ],
   "tabBar": {
     "color": "#7a837f", "selectedColor": "#146c4b", "backgroundColor": "#ffffff",

@@ -53,3 +53,8 @@ cloud-meal:
     api-v3-key: ${WECHAT_PAY_API_V3_KEY:}
     private-key-path: ${WECHAT_PAY_PRIVATE_KEY_PATH:}
     notify-url: ${WECHAT_PAY_NOTIFY_URL:}
+  ai-chef:
+    base-url: ${AI_CHEF_BASE_URL:http://127.0.0.1:8081}
+    service-token: ${CLOUD_MEAL_AI_SERVICE_TOKEN:}
+    connect-timeout-ms: ${AI_CHEF_CONNECT_TIMEOUT_MS:3000}
+    read-timeout-ms: ${AI_CHEF_READ_TIMEOUT_MS:70000}

@@ -39,3 +39,16 @@ export function request<T>(options: UniApp.RequestOptions) {
     })
   })
 }
+
+export function upload<T>(url:string,filePath:string,formData:Record<string,string>) {
+  return new Promise<T>((resolve,reject)=>{
+    const token=uni.getStorageSync('user_token')
+    uni.uploadFile({url:API_BASE_URL+url,filePath,name:'image',formData,
+      header:token?{Authorization:`Bearer ${token}`}:undefined,
+      success(response){
+        if(response.statusCode===401){uni.removeStorageSync('user_token');reject(new Error('请先登录'));return}
+        try{const result=JSON.parse(response.data) as ApiResponse<T>;if(result.code!=='SUCCESS'){uni.showToast({title:result.message||'上传失败',icon:'none'});reject(new Error(result.message));return}resolve(result.data)}
+        catch{reject(new Error('AI响应格式错误'))}
+      },fail(error){uni.showToast({title:'AI服务连接失败',icon:'none'});reject(error)}})
+  })
+}

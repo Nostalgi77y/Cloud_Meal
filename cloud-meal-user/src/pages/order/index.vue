@@ -4,6 +4,7 @@ import { onShow } from '@dcloudio/uni-app'
 import { request } from '@/utils/request'
 import { payOrder } from '@/utils/payment'
 import type { Order } from '@/types'
+import AiChefFloat from '@/components/AiChefFloat.vue'
 
 const orders = ref<Order[]>([])
 const deletingId = ref<string>()
@@ -50,6 +51,7 @@ onShow(load)
 
 <template>
   <view class="orders">
+    <AiChefFloat />
     <view v-if="!orders.length" class="empty">暂无订单</view>
     <view v-for="order in orders" :key="order.id" class="order">
       <view class="order-head"><text>订单 {{ order.orderNumber }}</text><text class="status">{{ labels[order.status] }}</text></view>

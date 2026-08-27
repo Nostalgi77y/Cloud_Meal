@@ -35,6 +35,10 @@ services:
       WECHAT_PAY_API_V3_KEY: ${WECHAT_PAY_API_V3_KEY:-}
       WECHAT_PAY_PRIVATE_KEY_PATH: ${WECHAT_PAY_PRIVATE_KEY_PATH:-}
       WECHAT_PAY_NOTIFY_URL: ${WECHAT_PAY_NOTIFY_URL:-}
+      AI_CHEF_BASE_URL: ${AI_CHEF_BASE_URL:-http://host.docker.internal:8081}
+      CLOUD_MEAL_AI_SERVICE_TOKEN: ${CLOUD_MEAL_AI_SERVICE_TOKEN:-}
+      AI_CHEF_CONNECT_TIMEOUT_MS: ${AI_CHEF_CONNECT_TIMEOUT_MS:-3000}
+      AI_CHEF_READ_TIMEOUT_MS: ${AI_CHEF_READ_TIMEOUT_MS:-70000}
     volumes:
       - ./data/uploads:/data/cloud-meal/uploads
     depends_on:
@@ -46,3 +50,7 @@ services:
     build: ../cloud-meal-admin
     depends_on: [server]
     ports: ["80:80"]
+  web:
+    build: ../cloud-meal-web
+    depends_on: [server]
+    ports: ["81:80"]

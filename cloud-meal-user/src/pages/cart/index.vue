@@ -6,6 +6,7 @@ import { useUserStore } from '@/stores/user'
 import { request } from '@/utils/request'
 import { payOrder } from '@/utils/payment'
 import type { Address, Order, UserCoupon } from '@/types'
+import AiChefFloat from '@/components/AiChefFloat.vue'
 
 const cart=useCartStore();const user=useUserStore();const addresses=ref<Address[]>([]);const coupons=ref<UserCoupon[]>([])
 const selectedAddress=ref<Address>();const selectedCoupon=ref<UserCoupon>();const showAddresses=ref(false);const showCoupons=ref(false)
@@ -36,6 +37,7 @@ onShow(loadCheckout)
   <view v-if="cart.items.length" class="options"><view @click="showAddresses=true"><text>收货地址</text><text class="value">{{selectedAddress?selectedAddress.consignee+' · '+selectedAddress.detail:'请选择'}} ›</text></view><view @click="showCoupons=true"><text>优惠券</text><text class="value discount">{{selectedCoupon?'- ¥'+selectedCoupon.discountAmount:(coupons.filter(i=>i.usable).length+'张可用')}} ›</text></view></view>
   <view v-if="cart.items.length" class="settle"><view><text class="saved" v-if="discount">已优惠 ¥{{discount.toFixed(2)}}</text><text>合计</text><text class="total">¥{{payable.toFixed(2)}}</text></view><button @click="checkout">提交订单</button></view>
 
+  <AiChefFloat />
   <view v-if="showAddresses" class="mask" @click.self="showAddresses=false"><view class="sheet"><text class="title">选择收货地址</text><view v-for="item in addresses" :key="item.id" class="choice" @click="chooseAddress(item)"><view><text>{{item.consignee}}　{{item.phone}}</text><small>{{item.province}}{{item.city}}{{item.district}}{{item.detail}}</small></view><text v-if="selectedAddress?.id===item.id">✓</text></view><button class="manage" @click="showAddresses=false;uni.navigateTo({url:'/pages/address/index'})">管理收货地址</button></view></view>
   <view v-if="showCoupons" class="mask" @click.self="showCoupons=false"><view class="sheet"><text class="title">选择优惠券</text><view class="choice" @click="chooseCoupon(undefined)"><text>不使用优惠券</text><text v-if="!selectedCoupon">✓</text></view><view v-for="item in coupons" :key="item.userCouponId" class="choice" :class="{disabled:!item.usable}" @click="item.usable&&chooseCoupon(item)"><view><text>{{item.name}}　减¥{{item.discountAmount}}</text><small>满¥{{item.thresholdAmount}}可用</small></view><text v-if="selectedCoupon?.userCouponId===item.userCouponId">✓</text></view></view></view>
 </view></template>

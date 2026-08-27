@@ -4,6 +4,7 @@ import { request, resolveAssetUrl } from '@/utils/request'
 import { useCartStore } from '@/stores/cart'
 import { useUserStore } from '@/stores/user'
 import type { Category, Dish } from '@/types'
+import AiChefFloat from '@/components/AiChefFloat.vue'
 
 const categories = ref<Category[]>([])
 const dishes = ref<Dish[]>([])
@@ -26,13 +27,13 @@ async function add(id: string) {
   if (addingId.value) return
   addingId.value = id
   try {
-    if (!user.isLoggedIn) await user.demoLogin()
+    if (!user.isLoggedIn) await user.login()
     try {
       await cart.add(id)
     } catch (error) {
       if (!(error instanceof Error) || !error.message.includes('请先登录')) throw error
       user.logout()
-      await user.demoLogin()
+      await user.login()
       await cart.add(id)
     }
     uni.showToast({ title: '已加入购物车' })
@@ -57,6 +58,7 @@ onMounted(loadCategories)
         </view>
       </scroll-view>
     </view>
+    <AiChefFloat />
     <view v-if="cart.totalQuantity" class="cart-bar" @click="uni.switchTab({url:'/pages/cart/index'})"><view><text class="cart-count">{{ cart.totalQuantity }}</text><text>已选商品</text></view><text class="cart-total">¥{{ cart.totalPrice.toFixed(2) }}　去结算</text></view>
   </view>
 </template>
